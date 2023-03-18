@@ -7,17 +7,27 @@ class Category(models.Model):
     class Meta:
         ordering=('title',)
         verbose_name_plural='Categories'
+
     def __str__(self):
         return self.title
 
 
 class Post(models.Model):
+    ACTIVE='active'
+    DRAFT='draft'
+
+    CHOICES_STATUS= (
+        (ACTIVE, "Actif"),
+        (DRAFT, 'Inactif')
+    )
+
     category= models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)
     title=models.CharField(max_length=255)
     slug=models.SlugField()
     intro=models.TextField()
     body=models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
+    status=models.CharField(max_length=10, choices=CHOICES_STATUS, default=ACTIVE)
 
     def __str__(self):
         return self.title
@@ -29,3 +39,7 @@ class Comment(models.Model):
     email = models.CharField(max_length=255)
     body=models.TextField()
     created_at= models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
